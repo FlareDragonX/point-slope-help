@@ -76,7 +76,12 @@ function drawGraph(ctx) {
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-    ctx.fillText(i, i * pxPerUnit, 14);
+      // Move -1 on x-axis slightly to the left
+      if (i === -1) {
+        ctx.fillText(i, i * pxPerUnit - 6, 14);
+      } else {
+        ctx.fillText(i, i * pxPerUnit, 14);
+      }
     ctx.restore();
     // y ticks
     ctx.beginPath();
@@ -86,7 +91,10 @@ function drawGraph(ctx) {
     ctx.save();
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
-    ctx.fillText(i, -16, -i * pxPerUnit);
+      // Remove -1 from y-axis
+      if (i !== -1) {
+        ctx.fillText(i, -16, -i * pxPerUnit);
+      }
     ctx.restore();
   }
   // Draw 10 labels outside border
