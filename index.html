@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Point-Slope Help</title>
+  <title>Aero Axis</title>
+    <style>
+      @font-face {
+        font-family: 'VIDEOPHREAK';
+        src: url('pics/VIDEOPHREAK.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+    </style>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,10 +26,11 @@
     }
     .container {
       margin-top: 40px;
-      background: #fff;
+    background: #a4cce8;
+    border: 6px solid #08f8ac;
       padding: 24px 32px;
       border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -58,7 +67,7 @@
       display: flex;
       gap: 32px;
       align-items: center;
-      font-family: 'Comic Sans MS', 'Baloo', 'Fredoka One', cursive, sans-serif;
+        font-family: 'VIDEOPHREAK', 'Comic Sans MS', 'Baloo', 'Fredoka One', cursive, sans-serif;
       color: #6fd6ff;
       -webkit-text-stroke: 2px #222;
       text-stroke: 2px #222;
@@ -73,25 +82,33 @@
       margin-left: auto;
       margin-right: auto;
     }
+    :root {
+      --btn-bg: #56fbea;
+      --btn-bg-hover: #88c0ff;
+      --btn-text: #30763b;
+    }
     .btn {
       padding: 10px 24px;
-      font-size: 1rem;
+      font-size: 1.2rem;
+      font-family: 'VIDEOPHREAK', 'Comic Sans MS', 'Baloo', 'Fredoka One', cursive, sans-serif;
       border: none;
       border-radius: 6px;
-      background: #1976d2;
-      color: #fff;
+      background: var(--btn-bg);
+      color: var(--btn-text);
       cursor: pointer;
       transition: background 0.2s;
       margin-bottom: 10px;
+      box-shadow: 0 0 8px #fff6, 0 2px 8px #2222;
+      letter-spacing: 1px;
     }
     .btn:hover {
-      background: #1565c0;
+      background: var(--btn-bg-hover);
     }
     .result {
       font-size: 2rem;
       margin-top: 10px;
       min-height: 24px;
-      font-family: 'Comic Sans MS', 'Baloo', 'Fredoka One', cursive, sans-serif;
+        font-family: 'VIDEOPHREAK', 'Comic Sans MS', 'Baloo', 'Fredoka One', cursive, sans-serif;
       color: #6fd6ff;
       -webkit-text-stroke: 2px #222;
       text-stroke: 2px #222;
@@ -104,11 +121,11 @@
   <img id="arrow-left" class="nav-arrow" title="Previous" src="pics/left.png" style="object-fit: cover;" alt="Previous" />
   <img id="arrow-right" class="nav-arrow" title="Next" src="pics/right.png" style="object-fit: cover;" alt="Next" />
     <div class="info">
-      <span id="equation">Y = mX + b</span>
-      <span id="point">(X, Y)</span>
+  <span id="equation">Y = mX + b</span>
+  <span id="point">(X, Y)</span>
     </div>
   <canvas id="graph" class="graph" width="440" height="440"></canvas>
-    <button class="btn" id="show-btn">Show Line & Point</button>
+  <button class="btn" id="show-btn">Show Line & Point</button>
     <div class="result" id="result"></div>
   </div>
   <script src="script.js"></script>

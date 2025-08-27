@@ -14,15 +14,23 @@ function generateProblem() {
   const onLine = Math.random() < 0.5;
   let x, y;
   if (onLine) {
-    x = randInt(-9, 9);
-    y = m * x + b;
-    // Clamp y to [-10, 10]
+    let attempts = 0;
+    do {
+      x = randInt(-9, 9);
+      y = m * x + b;
+      attempts++;
+    } while ((y < -10 || y > 10) && attempts < 10);
+    // Clamp y to [-10, 10] if all attempts fail
     if (y < -10) y = -10;
     if (y > 10) y = 10;
   } else {
-    x = randInt(-9, 9);
-    y = m * x + b + randInt(1, 4) * (Math.random() < 0.5 ? 1 : -1); // offset
-    // Clamp y to [-10, 10]
+    let attempts = 0;
+    do {
+      x = randInt(-9, 9);
+      y = m * x + b + randInt(1, 4) * (Math.random() < 0.5 ? 1 : -1); // offset
+      attempts++;
+    } while ((y < -10 || y > 10) && attempts < 10);
+    // Clamp y to [-10, 10] if all attempts fail
     if (y < -10) y = -10;
     if (y > 10) y = 10;
   }
@@ -42,7 +50,7 @@ function drawGraph(ctx) {
   const pxPerUnit = 20;
   // Draw grid lines
   ctx.lineWidth = 1.1;
-  ctx.strokeStyle = '#c1eaff';
+  ctx.strokeStyle = '#3a7bd5'; // match axis color
   for (let i = -10; i <= 10; i++) {
     // vertical grid
     ctx.beginPath();
@@ -76,12 +84,13 @@ function drawGraph(ctx) {
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-      // Move -1 on x-axis slightly to the left
-      if (i === -1) {
-        ctx.fillText(i, i * pxPerUnit - 6, 14);
-      } else {
-        ctx.fillText(i, i * pxPerUnit, 14);
-      }
+    if (i % 2 === 0) {
+      ctx.fillText(i, i * pxPerUnit, 14);
+    } else {
+      ctx.globalAlpha = 0;
+      ctx.fillText(i, i * pxPerUnit, 14);
+      ctx.globalAlpha = 1;
+    }
     ctx.restore();
     // y ticks
     ctx.beginPath();
@@ -91,10 +100,13 @@ function drawGraph(ctx) {
     ctx.save();
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
-      // Remove -1 from y-axis
-      if (i !== -1) {
-        ctx.fillText(i, -16, -i * pxPerUnit);
-      }
+    if (i % 2 === 0) {
+      ctx.fillText(i.toString(), -16, -i * pxPerUnit);
+    } else {
+      ctx.globalAlpha = 0;
+      ctx.fillText(i.toString(), -16, -i * pxPerUnit);
+      ctx.globalAlpha = 1;
+    }
     ctx.restore();
   }
   // Draw 10 labels outside border
@@ -125,11 +137,23 @@ function drawLineAndPoint(ctx, m, b, x, y) {
   ctx.moveTo(x1 * 20, -y1 * 20);
   ctx.lineTo(x2 * 20, -y2 * 20);
   ctx.stroke();
-  // Draw point
-  ctx.fillStyle = '#d32f2f';
-  ctx.beginPath();
-  ctx.arc(x * 20, -y * 20, 7, 0, 2 * Math.PI);
-  ctx.fill();
+  // Draw Bubble image at the plot point
+  if (!window._bubbleImg) {
+    window._bubbleImg = new window.Image();
+  window._bubbleImg.src = 'https://images.vexels.com/media/users/3/299170/isolated/preview/e6b778086e5fa0a622852975737b29c7-green-earth-globe-icon.png';
+    window._bubbleImg.onload = function() {
+      updateDisplay();
+    };
+  }
+  if (window._bubbleImg.complete && window._bubbleImg.naturalWidth > 0) {
+    ctx.drawImage(window._bubbleImg, x * 20 - 14, -y * 20 - 14, 28, 28);
+  } else {
+    // Fallback to red dot if image not loaded yet
+    ctx.fillStyle = '#d32f2f';
+    ctx.beginPath();
+    ctx.arc(x * 20, -y * 20, 7, 0, 2 * Math.PI);
+    ctx.fill();
+  }
   ctx.restore();
 }
 
@@ -156,8 +180,14 @@ function updateDisplay() {
     drawLineAndPoint(ctx, m, b, x, y);
     // Show result
     const onLine = Math.abs(y - (m * x + b)) < 1e-6;
-    document.getElementById('result').textContent = onLine ?
-      'The point is on the line.' : 'The point is NOT on the line.';
+    const resultElem = document.getElementById('result');
+    if (onLine) {
+      resultElem.textContent = 'The point is on the line!';
+      resultElem.style.color = '#18e783ff'; // blue-green
+    } else {
+      resultElem.textContent = 'The point is NOT on the line.';
+      resultElem.style.color = '#c399fdff'; // light purple
+    }
   }
 }
 
